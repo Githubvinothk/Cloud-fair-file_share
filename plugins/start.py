@@ -81,7 +81,8 @@ async def start_command(client: Client, message: Message):
                 pass
         media = msg.document or msg.video or msg.audio or msg.photo
         fname = media.file_name if media.file_name else ""
-        await message.reply_text("**Hello, this is your message after 15 minutes. \n {fname}**")
+        link = f"https://telegram.me/{client.username}?start={base64_string}"
+        await message.reply_text("**Hello, this is your message after 15 minutes. \n {fname} \n {link}**")
         return
     else:
         reply_markup = InlineKeyboardMarkup(
