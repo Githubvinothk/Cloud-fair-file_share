@@ -70,15 +70,18 @@ async def start_command(client: Client, message: Message):
             try:
                 sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
                 await asyncio.sleep(0.5)
-                await asyncio.sleep(30)  # 900 seconds = 15 minutes
+                await asyncio.sleep(60 * 60) 
                 await sent_msg.delete()
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-                await asyncio.sleep(900)  # 900 seconds = 15 minutes
+                await asyncio.sleep(60 * 60)  
                 await sent_msg.delete()
             except:
                 pass
+        media = msg.document or msg.video or msg.audio or msg.photo
+        fname = media.file_name if media.file_name else ""
+        await message.reply_text("**Hello, this is your message after 15 minutes. \n {fname}**")
         return
     else:
         reply_markup = InlineKeyboardMarkup(
