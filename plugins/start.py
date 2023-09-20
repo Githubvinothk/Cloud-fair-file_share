@@ -10,6 +10,51 @@ from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL
 from helper_func import subscribed, encode, decode, get_messages
 from database.database import add_user, del_user, full_userbase, present_user
 
+async def delete_after_delay(message, delay):
+    await asyncio.sleep(delay)
+    await message.delete()
+    
+async def send_message_to_channel(client, message, base64_string, id, last_message):
+    username = (await client.get_me()).username
+    chat_id = message.chat.id
+
+    if bool(CUSTOM_CAPTION) and bool(message.document):
+        caption = CUSTOM_CAPTION.format(previouscaption="" if not message.caption else message.caption.html, filename=message.document.file_name)
+    else:
+        caption = "" if not message.caption else message.caption.html
+
+    if DISABLE_CHANNEL_BUTTON:
+        reply_markup = message.reply_markup
+    else:
+        reply_markup = None
+
+    try:
+        sent_msg = await message.copy(chat_id=id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+
+        media = message.document or message.video or message.audio or message.photo
+        fname = media.file_name if media.file_name else ""
+        link = f"https://telegram.me/{username}?start={base64_string}"
+
+        if last_message:
+            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n{fname}\n\n{link}**", disable_web_page_preview=True, quote=True)
+            asyncio.create_task(delete_after_delay(sent_msg, 10))
+        
+        await asyncio.sleep(0.5)  
+
+    except FloodWait as e:
+        await asyncio.sleep(e.x)
+        sent_msg = await message.copy(chat_id=id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+
+        media = message.document or message.video or message.audio or message.photo
+        fname = media.file_name if media.file_name else ""
+        link = f"https://telegram.me/{username}?start={base64_string}"
+
+        if last_message:
+            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n`{fname}`\n\n`{link}`**", disable_web_page_preview=True, quote=True)
+            asyncio.create_task(delete_after_delay(sent_msg, 10))
+        
+        await asyncio.sleep(0.5)
+
 @Bot.on_message(filters.command('start') & filters.private & subscribed)
 async def start_command(client: Client, message: Message):
     id = message.from_user.id
@@ -54,39 +99,11 @@ async def start_command(client: Client, message: Message):
             await message.reply_text("Something went wrong..!")
             return
         await temp_msg.delete()
+        
+        for idx, msg in enumerate(messages):
+            last_message = idx == len(messages) - 1  # Check if this is the last message in the list
+            await send_message_to_channel(client, msg, base64_string, id, last_message)
 
-        for msg in messages:
-
-            if bool(CUSTOM_CAPTION) & bool(msg.document):
-                caption = CUSTOM_CAPTION.format(previouscaption = "" if not msg.caption else msg.caption.html, filename = msg.document.file_name)
-            else:
-                caption = "" if not msg.caption else msg.caption.html
-
-            if DISABLE_CHANNEL_BUTTON:
-                reply_markup = msg.reply_markup
-            else:
-                reply_markup = None
-
-            try:
-                sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-                await asyncio.sleep(0.5)
-                await asyncio.sleep(60 * 60) 
-                await sent_msg.delete()
-                
-                media = msg.document or msg.video or msg.audio or msg.photo
-                fname = media.file_name if media.file_name else ""
-                print(fname) 
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-                sent_msg = await msg.copy(chat_id=message.from_user.id, caption = caption, parse_mode = ParseMode.HTML, reply_markup = reply_markup, protect_content=PROTECT_CONTENT)
-                await asyncio.sleep(60 * 60)  
-                await sent_msg.delete()
-            except:
-                pass
-    
-        link = f"https://telegram.me/{client.username}?start={base64_string}"
-        await client.send_message(message.chat.id, f"**Hello, this is your message after 15 minutes. \n {fname} \n\n {link}**")
-        return
     else:
         reply_markup = InlineKeyboardMarkup(
             [
@@ -118,8 +135,6 @@ WAIT_MSG = """"<b>Processing ...</b>"""
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
 #=====================================================================================##
-
-    
     
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
