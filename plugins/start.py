@@ -15,8 +15,6 @@ async def delete_after_delay(message, delay):
     await message.delete()
     
 async def send_message_to_channel(client, message, base64_string, id, last_message):
-    username = (await client.get_me()).username
-    chat_id = message.chat.id
 
     if bool(CUSTOM_CAPTION) and bool(message.document):
         caption = CUSTOM_CAPTION.format(previouscaption="" if not message.caption else message.caption.html, filename=message.document.file_name)
@@ -36,7 +34,7 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
         link = f"https://telegram.me/{username}?start={base64_string}"
 
         if last_message:
-            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n{fname}\n\n{link}**", disable_web_page_preview=True, quote=True)
+            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n`{fname}`\n\n{link}**", disable_web_page_preview=True, quote=True)
             asyncio.create_task(delete_after_delay(sent_msg, 10))
         
         await asyncio.sleep(0.5)  
@@ -50,7 +48,7 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
         link = f"https://telegram.me/{username}?start={base64_string}"
 
         if last_message:
-            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n`{fname}`\n\n`{link}`**", disable_web_page_preview=True, quote=True)
+            await sent_msg.reply_text(f"**Hello, this is your message after 15 minutes.\n\n`{fname}`\n\n{link}**", disable_web_page_preview=True, quote=True)
             asyncio.create_task(delete_after_delay(sent_msg, 10))
         
         await asyncio.sleep(0.5)
