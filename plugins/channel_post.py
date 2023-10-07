@@ -10,6 +10,7 @@ from config import ADMINS, CHANNEL_ID, DISABLE_CHANNEL_BUTTON
 from helper_func import encode, humanbytes
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & ~filters.command(['start','users','broadcast','batch','genlink','stats']))
+@Bot.on_message(filters.private & filters.user(ADMINS) & ~filters.command(['start','users','broadcast','batch','genlink','stats']))
 async def channel_post(client: Client, message: Message):
     reply_text = await message.reply_text("Please Wait...!", quote=True)
     try:
@@ -25,16 +26,18 @@ async def channel_post(client: Client, message: Message):
     string = f"get-{converted_id}"
     base64_string = await encode(string)
     link = f"https://telegram.me/{client.username}?start={base64_string}"
+    
     media = post_message.audio or post_message.video or post_message.document
     
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
+    file_name = media.file_name
+    caption = post_message.caption if post_message.caption else ""
+    file_size = media.file_size if media.file_size else ""
     
-    # Include media information, caption, and file size in the reply_text
-    reply_text_text = f"<b>Here is your link</b>\n\n{link}\n\n"
-    if media:
-        reply_text_text += f"File Name: {media.file_name}\n"
-        reply_text_text += f"Caption: {post_message.caption}\n" if post_message.caption else ""
-        reply_text_text += f"File Size: {media.file_size} bytes\n" if media.file_size else ""
+    reply_text_text = f"""<b>{file_name} - {file_size}
+     📂 File Link ➠ :{link}
+     </b>
+     """
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
     
     await reply_text.edit_text(reply_text_text, reply_markup=reply_markup, disable_web_page_preview=True)
 
