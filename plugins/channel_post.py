@@ -28,11 +28,17 @@ async def channel_post(client: Client, message: Message):
     
     media = post_message.audio or post_message.video or post_message.document
     
-    file_name = media.file_name
-    caption = post_message.caption if post_message.caption else ""
-    file_size = humanbytes(media.file_size) if media.file_size else ""
+    if media:
+        # Media is present, send file details
+        file_name = media.file_name
+        caption = post_message.caption if post_message.caption else ""
+        file_size = humanbytes(media.file_size) if media.file_size else ""
+        
+        text = f"""<code>{file_name}</code>\n<b>🔰 Size: {file_size}\n\n{link}</b>"""
+    else:
+        # No media, send only the link
+        text = f"<b>Here is your link: {link}</b>"
     
-    text = f"""<code>{file_name}</code>\n<b>🔰 Size: {file_size}\n\n{link}</b>"""
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
     
     await reply_text.edit_text(text, reply_markup=reply_markup, disable_web_page_preview=True)
