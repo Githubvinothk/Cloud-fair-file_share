@@ -27,8 +27,7 @@ async def channel_post(client: Client, message: Message):
     media = message.document or message.video or message.audio or message.photo
     fname = media.file_name if media.file_name else ""
     caption = message.caption
-    fsize = media.file_size
-    file_size = await humanbytes(fsize)
+    file_size = humanbytes(media.file_size)
     link = f"https://telegram.me/{client.username}?start={base64_string}"
 
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
