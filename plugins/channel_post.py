@@ -11,12 +11,12 @@ from helper_func import encode, humanbytes
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & ~filters.command(['start','users','broadcast','batch','genlink','stats']))
 async def channel_post(client: Client, message: Message):
-    reply_text = await message.reply_text("Please Wait...!", quote = True)
+    reply_text = await message.reply_text("Please Wait...!", quote=True)
     try:
-        post_message = await message.copy(chat_id = client.db_channel.id, disable_notification=True)
+        post_message = await message.copy(chat_id=client.db_channel.id, disable_notification=True)
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        post_message = await message.copy(chat_id = client.db_channel.id, disable_notification=True)
+        post_message = await message.copy(chat_id=client.db_channel.id, disable_notification=True)
     except Exception as e:
         print(e)
         await reply_text.edit_text("Something went Wrong..!")
@@ -24,15 +24,19 @@ async def channel_post(client: Client, message: Message):
     converted_id = post_message.id * abs(client.db_channel.id)
     string = f"get-{converted_id}"
     base64_string = await encode(string)
-    media = post_message.document or post_message.video or post_message.audio or post_message.photo
-    fname = media.file_name if media.file_name else ""
-    caption = post_message.caption
-    file_size = humanbytes(media.file_size)
     link = f"https://telegram.me/{client.username}?start={base64_string}"
-
+    media = post_message.audio or post_message.video or post_message.document
+    
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
-
-    await reply_text.edit(f"<b><code>{caption}</code>\nFile Size : {file_size}\n\nHere is your link</b>\n\n{link}", reply_markup=reply_markup, disable_web_page_preview = True)
+    
+    # Include media information, caption, and file size in the reply_text
+    reply_text_text = f"<b>Here is your link</b>\n\n{link}\n\n"
+    if media:
+        reply_text_text += f"File Name: {media.file_name}\n"
+        reply_text_text += f"Caption: {post_message.caption}\n" if post_message.caption else ""
+        reply_text_text += f"File Size: {media.file_size} bytes\n" if media.file_size else ""
+    
+    await reply_text.edit_text(reply_text_text, reply_markup=reply_markup, disable_web_page_preview=True)
 
     if not DISABLE_CHANNEL_BUTTON:
         await post_message.edit_reply_markup(reply_markup)
