@@ -24,9 +24,9 @@ async def channel_post(client: Client, message: Message):
     converted_id = post_message.id * abs(client.db_channel.id)
     string = f"get-{converted_id}"
     base64_string = await encode(string)
-    media = message.document or message.video or message.audio or message.photo
+    media = post_message.document or post_message.video or post_message.audio or post_message.photo
     fname = media.file_name if media.file_name else ""
-    caption = message.caption
+    caption = post_message.caption
     file_size = humanbytes(media.file_size)
     link = f"https://telegram.me/{client.username}?start={base64_string}"
 
