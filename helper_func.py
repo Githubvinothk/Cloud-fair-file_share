@@ -9,6 +9,17 @@ from config import FORCE_SUB_CHANNEL, ADMINS
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
 
+def humanbytes(size):
+    if not size:
+        return ""
+    power = 2**10
+    n = 0
+    Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+    while size > power:
+        size /= power
+        n += 1
+    return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
+
 async def is_subscribed(filter, client, update):
     if not FORCE_SUB_CHANNEL:
         return True
