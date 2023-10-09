@@ -33,8 +33,8 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
         fname = media.file_name if media.file_name else ""
         link = f"https://telegram.me/{client.username}?start={base64_string}"
         if last_message:
-            await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 60 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
-            asyncio.create_task(delete_after_delay(sent_msg, 60 * 60))
+            await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 10 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
+            asyncio.create_task(delete_after_delay(sent_msg, 10 * 10))
         
         await asyncio.sleep(0.5)  
 
@@ -47,8 +47,8 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
         link = f"https://telegram.me/{client.username}?start={base64_string}"
 
         if last_message:
-            await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 60 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
-            asyncio.create_task(delete_after_delay(sent_msg, 60 * 60))
+            await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 10 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
+            asyncio.create_task(delete_after_delay(sent_msg, 10 * 10))
         
         await asyncio.sleep(0.5)
 
