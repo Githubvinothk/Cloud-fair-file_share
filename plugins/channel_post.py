@@ -24,8 +24,8 @@ async def channel_post(client: Client, message: Message):
     converted_id = post_message.id * abs(client.db_channel.id)
     string = f"get-{converted_id}"
     base64_string = await encode(string)
-    link = f"https://telegram.me/{client.username}?start={base64_string}"
-     
+    #link = f"https://telegram.me/{client.username}?start={base64_string}"
+    link = f"https://filesharee.onlyforgamepfc.workers.dev/?start={base64_string}"
 
     media = post_message.audio or post_message.video or post_message.document
     
@@ -56,8 +56,8 @@ async def new_post(client: Client, message: Message):
     converted_id = message.id * abs(client.db_channel.id)
     string = f"get-{converted_id}"
     base64_string = await encode(string)
-    link = f"https://telegram.me/{client.username}?start={base64_string}"
-     
+    #link = f"https://telegram.me/{client.username}?start={base64_string}"
+     link = f"https://filesharee.onlyforgamepfc.workers.dev/?start={base64_string}"
     
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
     try:
