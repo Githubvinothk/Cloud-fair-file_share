@@ -35,7 +35,7 @@ async def channel_post(client: Client, message: Message):
         caption = post_message.caption if post_message.caption else ""
         file_size = humanbytes(media.file_size) if media.file_size else ""
         
-        text = f"""<code>{file_name}</code>\n<b>🔰 Size: {file_size}\n\n{link}</b>"""
+        text = f"""<b>{post_message.caption}</b>\n<b>🔰 Size: {file_size}\n\n{link}</b>"""
     else:
         # No media, send only the link
         text = f"<b>Here is your link: {link}</b>"
