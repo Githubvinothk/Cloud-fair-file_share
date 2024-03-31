@@ -31,8 +31,8 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
 
         media = message.document or message.video or message.audio or message.photo
         fname = media.file_name if media.file_name else ""
-        #link = f"https://telegram.me/{client.username}?start={base64_string}"
-        link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
+        link = f"https://telegram.me/{client.username}?start={base64_string}"
+        #link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
         
         if last_message:
             await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 10 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
@@ -46,8 +46,8 @@ async def send_message_to_channel(client, message, base64_string, id, last_messa
 
         media = message.document or message.video or message.audio or message.photo
         fname = media.file_name if media.file_name else ""
-        #link = f"https://telegram.me/{client.username}?start={base64_string}"
-        link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
+        link = f"https://telegram.me/{client.username}?start={base64_string}"
+        #link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
         
         if last_message:
             await sent_msg.reply_text(f"<b>⚠️ Note : This File/Video will be deleted in 10 mins ❌ (Due to Copyright Issues).\n\nPlease forward this File/Video to your Saved Messages/Friends and Start Download there\n\n<code>{caption}</code>\n\n📂 Fɪʟᴇ ʟɪɴᴋ ➠ :  {link}</b>", disable_web_page_preview=True, quote=True)
