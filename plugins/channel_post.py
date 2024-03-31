@@ -25,7 +25,7 @@ async def channel_post(client: Client, message: Message):
     string = f"get-{converted_id}"
     base64_string = await encode(string)
     #link = f"https://telegram.me/{client.username}?start={base64_string}"
-    link = f"https://filesharee.onlyforgamepfc.workers.dev/?start={base64_string}"
+    link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
 
     media = post_message.audio or post_message.video or post_message.document
     
@@ -40,7 +40,7 @@ async def channel_post(client: Client, message: Message):
         # No media, send only the link
         text = f"<b>Here is your link: {link}</b>"
     
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://filesharee.onlyforgamepfc.workers.dev/share/url?url={link}')]])
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://tdmfileshare.onlyforgamepfc.workers.dev/share/url?url={link}')]])
     
     await reply_text.edit_text(text, reply_markup=reply_markup, disable_web_page_preview=True)
 
@@ -57,9 +57,9 @@ async def new_post(client: Client, message: Message):
     string = f"get-{converted_id}"
     base64_string = await encode(string)
     #link = f"https://telegram.me/{client.username}?start={base64_string}"
-    link = f"https://filesharee.onlyforgamepfc.workers.dev/?start={base64_string}"
+    link = f"https://tdmfileshare.onlyforgamepfc.workers.dev/?start={base64_string}"
     
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://filesharee.onlyforgamepfc.workers.dev/share/url?url={link}')]])
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://tdmfileshare.onlyforgamepfc.workers.dev/share/url?url={link}')]])
     try:
         await message.edit_reply_markup(reply_markup)
     except Exception as e:
